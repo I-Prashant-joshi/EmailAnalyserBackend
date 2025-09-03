@@ -7,6 +7,11 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const nodemailer = require("nodemailer");
 const { Email } = require("./Email");
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected Successfully"))
@@ -14,11 +19,6 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 
 // Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
 app.use(express.json());
 
 // ESP Detection Function
@@ -88,7 +88,7 @@ app.post('/api/fetch-email', async (req, res) => {
     const receivingChain = extractReceivingChain(emailData.headers);
     const espType = detectESP(emailData.headers);
    
-    const emailRecord = new Emaill({
+    const emailRecord = new Email({
       subject: emailData.subject,
       from:emailData.from,
       receivingChain,
