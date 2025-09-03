@@ -1,15 +1,6 @@
 // MongoDB configuration (for production use)
-const mongoose = require('mongoose');
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/email-analysis');
-    console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
-};
+const mongoose =require('mongoose')
 
 // Email Schema
 const emailSchema = new mongoose.Schema({
@@ -39,4 +30,4 @@ const emailSchema = new mongoose.Schema({
 
 const Email = mongoose.model('Email', emailSchema);
 
-module.exports = { connectDB, Email };
+module.exports = {Email};

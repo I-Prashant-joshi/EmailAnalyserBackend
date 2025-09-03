@@ -1,18 +1,21 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
-const { connectDB, Email } = require('../server/mongodb-config'); 
 const { fetchEmailFromIMAP } = require('./imap-config');
-
+const mongoose =require('mongoose')
 const app = express();
 const PORT = process.env.PORT || 3001;
 const nodemailer = require("nodemailer");
+const { Email } = require("./Email");
+
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Connected Successfully"))
+  .catch(err => console.error("MongoDB Connection Error:", err));
 
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-connectDB(); // Connect MongoDB
 
 // ESP Detection Function
 function detectESP(headers) {
@@ -81,7 +84,7 @@ app.post('/api/fetch-email', async (req, res) => {
     const receivingChain = extractReceivingChain(emailData.headers);
     const espType = detectESP(emailData.headers);
    
-    const emailRecord = new Email({
+    const emailRecord = new Emaill({
       subject: emailData.subject,
       from:emailData.from,
       receivingChain,
